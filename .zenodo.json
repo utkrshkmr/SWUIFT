@@ -1,0 +1,25 @@
+{
+  "title": "SWUIFT: Simulating Wildfire-Urban Interface Fire Transmission",
+  "upload_type": "software",
+  "description": "Software for simulating wildfire-urban interface fire transmission.",
+  "creators": [
+    {
+      "name": "Elhami-Khorasani, Negar",
+      "affiliation": "University at Buffalo"
+    }
+  ],
+  "keywords": [
+    "wildfire",
+    "wildland-urban interface",
+    "fire simulation"
+  ],
+  "version": "1.0.0",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/utkrshkmr/SWUIFT",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "notes": "Configure the ZENODO_ACCESS_TOKEN secret before deposition. Add DOI fields only after Zenodo assigns them. Distribution is governed by the SWUIFT Research and Academic Use License in LICENSE."
+}

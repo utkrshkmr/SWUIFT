@@ -1,0 +1,66 @@
+# Marshall 2021-12-30 11:00–21:00 MST
+
+This is a Python-only, 121-timestep Marshall input example. The 5-minute
+timesteps are inclusive from `2021-12-30T18:00:00Z` through
+`2021-12-31T04:00:00Z` (11:00–21:00 MST).
+
+Binary inputs are generated under the Git-ignored
+`examples/artifacts/marshall_20211230_1100-2100_MST/` directory. The example
+contains one HDF5 wind file, `wind.mat`, holding both `wind_s` and `wind_d`.
+Ignition values for source timesteps 122–144 are set to zero because they are
+outside this package's time window. The exact count is recorded in
+`provenance.json`.
+
+## Prepare and package
+
+Run from the `SWUIFT-PUBLIC` repository root:
+
+```bash
+python scripts/prepare_marshall_example.py
+python scripts/package_marshall_example.py
+python scripts/package_marshall_example.py --verify-only
+```
+
+The packaging command writes `input-checksums.sha256` here and creates the
+reproducible archive
+`examples/artifacts/marshall_20211230_1100-2100_MST.tar.gz`. Verification is
+read-only and checks staging files, the single `wind.mat` representation,
+metadata checksums, and every archived member.
+
+## Reproducible CLI command
+
+Install the public packages as described in the CLI documentation, then run:
+
+```bash
+swuift \
+  --manifest examples/marshall_20211230_1100-2100_MST/manifest.json \
+  --data-root examples/artifacts/marshall_20211230_1100-2100_MST \
+  --output-dir /tmp/swuift-marshall-example \
+  --lazy-wind \
+  --no-out-frames \
+  --no-out-video \
+  --no-out-gif \
+  --no-out-ig-plots \
+  --checkpoint-every 0
+```
+
+The simulation is intentionally not run by the preparation or packaging
+scripts. `manifest.json` is directly consumable by the public scenario CLI;
+`provenance.json` documents source hashes and transformations without recording
+machine-specific absolute paths.
+
+## Validated output artifact
+
+The completed 121-step public run can be prepared and packaged with:
+
+```bash
+python scripts/prepare_marshall_output.py
+python scripts/package_marshall_output.py
+python scripts/package_marshall_output.py --verify-only
+```
+
+Tracked `output-manifest.json`, `output-provenance.json`,
+`output-summary.json`, and `output-checksums.sha256` describe the sanitized
+output. Binary scientific outputs and representative PNGs are staged under
+`examples/artifacts/marshall_20211230_1100-2100_MST-output/`; the reproducible
+archive is written beside that directory with a `.tar.gz` suffix.

@@ -1,0 +1,99 @@
+# Troubleshooting and contact
+
+## Installation
+
+**`swuift: command not found`**
+
+Activate the environment used for installation, then reinstall from the
+versioned source root if necessary:
+
+```bash
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+swuift --help
+```
+
+On PowerShell, activate with `.\.venv\Scripts\Activate.ps1`.
+
+**The desktop application does not open**
+
+Verify the package first. On source installations, launch from a terminal to
+see the error:
+
+```bash
+cd apps/desktop
+python swuift_app.py
+```
+
+Confirm the platform and architecture match the downloaded package.
+
+## Inputs and time
+
+**Missing or invalid input files**
+
+All ten paths must exist and be readable. Confirm internal variable names and
+formats against [Input schema](input-schema.md).
+
+**Incompatible shape**
+
+All rasters must use one rows × columns grid; latitude length equals rows and
+longitude length equals columns. Confirm layer orientation and preprocessing.
+
+**Wind timestep is out of range**
+
+The wind file does not cover the requested inclusive state count. Shorten the
+window only when scientifically appropriate or obtain the complete bundle.
+
+**Integer timestep or time-alignment error**
+
+Start and end must be on five-minute boundaries and the duration must be
+divisible by five minutes. The CLI does not accept `Z`; omit it while recording
+the UTC convention separately.
+
+## Runtime and outputs
+
+**Out of memory while loading wind**
+
+Enable **Lazy Wind** in the GUI or pass `--lazy-wind` to the CLI. Close other
+memory-intensive applications.
+
+**Run is slow**
+
+Large grids, lazy wind I/O, high-DPI frames, animations, and per-step exports
+increase runtime. Disable unneeded outputs. Do not alter the scientific window
+only to improve speed without documenting the change.
+
+**Video or GIF is missing**
+
+Frames must be enabled for animation generation. Confirm there is enough disk
+space and inspect `run_log.txt` for encoder errors.
+
+**Output folder rejected**
+
+Choose a writable directory outside the installed CLI package tree. Prefer a
+dedicated results folder with ample free space.
+
+**A GUI job failed**
+
+Open the failed queue entry to view details, then inspect `run_log.txt`. Keep
+the log, `run_params.json`, software version, and input checksums when asking
+for help.
+
+## Contact
+
+For scientific questions:
+
+- Prof. Negar Elhami-Khorasani
+- Email: `negarkho@buffalo.edu`
+
+For commercial licensing, email `techtransfer@buffalo.edu`.
+
+For software issues, use `<FUTURE_PUBLIC_ISSUE_TRACKER_URL>` after the public
+repository is announced. Do not attach restricted input data. Include:
+
+1. SWUIFT version and full commit SHA;
+2. operating system and architecture;
+3. GUI or CLI;
+4. exact command or relevant settings, with sensitive paths removed;
+5. the error text and the relevant portion of `run_log.txt`;
+6. input shapes and checksums, but not restricted files.

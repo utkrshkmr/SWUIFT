@@ -1,0 +1,120 @@
+# Command line
+
+The `swuift` command supports one explicit run or a sequential JSON batch.
+
+```bash
+swuift --help
+python -m swuift --help
+```
+
+## Single-run structure
+
+```bash
+swuift \
+  --job-name <NAME> \
+  --fire-prog <PATH> --domains <PATH> --landcover <PATH> \
+  --homes <PATH> --lat <PATH> --lon <PATH> \
+  --harden-rad-map <PATH> --harden-spo-map <PATH> \
+  --water <PATH> --wind <PATH> \
+  --grid-size 10 \
+  --t-start "2021-12-30 18:00" --t-end "2021-12-31 04:00" \
+  --harden-rad 70 --harden-spo 70 \
+  --rad-ig-thresh 14000 --rad-decay 1.0 \
+  --brand-wind-coef 30 --brand-wind-sd 0.3 \
+  --brand-wind-sd-lat 4.85 \
+  --seed-harden 123456 --seed-spread 10 \
+  --lazy-wind \
+  --output-dir <OUTPUT_DIR> \
+  --frame-dpi 150 --dump-every 0 --no-dump-csv
+```
+
+Replace every placeholder. The output directory must be writable and outside
+the installed CLI package tree.
+
+## Required options
+
+| Group | Options |
+|---|---|
+| Identity | `--job-name` |
+| Inputs | `--fire-prog`, `--domains`, `--landcover`, `--homes`, `--lat`, `--lon`, `--harden-rad-map`, `--harden-spo-map`, `--water`, `--wind` |
+| Grid/time | `--grid-size`, `--t-start`, `--t-end` |
+| Model | `--harden-rad`, `--harden-spo`, `--rad-ig-thresh`, `--rad-decay`, `--brand-wind-coef`, `--brand-wind-sd`, `--brand-wind-sd-lat` |
+| Reproducibility | `--seed-harden`, `--seed-spread` |
+| Execution | `--lazy-wind` or `--no-lazy-wind`, `--output-dir`, `--frame-dpi`, `--dump-every`, `--dump-csv` or `--no-dump-csv` |
+
+Accepted time syntax is `YYYY-MM-DD HH:MM`, `YYYY-MM-DDTHH:MM`, or
+`YYYY-MM-DD HH:MM:SS`. The parser does not accept a trailing `Z` or timezone
+offset. When a dataset uses UTC, enter the values without `Z` and record that
+UTC convention with the run.
+
+## Output switches
+
+| Switch pair | Default |
+|---|---|
+| `--out-frames` / `--no-out-frames` | on |
+| `--out-video` / `--no-out-video` | on |
+| `--out-gif` / `--no-out-gif` | on |
+| `--out-ig-plots` / `--no-out-ig-plots` | on |
+| `--out-fire-csv` / `--no-out-fire-csv` | on |
+| `--out-buildings-csv` / `--no-out-buildings-csv` | on |
+| `--out-rad-steps` / `--no-out-rad-steps` | off |
+| `--out-spo-steps` / `--no-out-spo-steps` | off |
+
+Video and GIF generation require frames.
+
+## Batch mode
+
+```bash
+swuift --batch jobs.json
+```
+
+The file must contain a non-empty top-level `jobs` array. Field names are the
+snake_case equivalents of CLI flags. All required single-run fields are
+required in each job; output switches are optional.
+
+```json
+{
+  "jobs": [
+    {
+      "name": "run_a",
+      "fire_prog": "<PATH>",
+      "domains": "<PATH>",
+      "landcover": "<PATH>",
+      "homes": "<PATH>",
+      "lat": "<PATH>",
+      "lon": "<PATH>",
+      "harden_rad_map": "<PATH>",
+      "harden_spo_map": "<PATH>",
+      "water": "<PATH>",
+      "wind": "<PATH>",
+      "grid_size": 10,
+      "t_start": "2021-12-30 18:00",
+      "t_end": "2021-12-31 04:00",
+      "harden_rad": 70,
+      "harden_spo": 70,
+      "rad_ig_thresh": 14000,
+      "rad_decay": 1.0,
+      "brand_wind_coef": 30,
+      "brand_wind_sd": 0.3,
+      "brand_wind_sd_lat": 4.85,
+      "seed_harden": 123456,
+      "seed_spread": 10,
+      "lazy_wind": true,
+      "output_dir": "<OUTPUT_DIR>",
+      "frame_dpi": 150,
+      "dump_every": 0,
+      "dump_csv": false
+    }
+  ]
+}
+```
+
+## Performance controls
+
+`--lazy-wind` reduces memory use but increases per-step I/O. Use
+`--no-lazy-wind` only when enough memory is available. To limit rendering cost,
+disable video, GIF, and frames together:
+
+```bash
+--no-out-video --no-out-gif --no-out-frames
+```

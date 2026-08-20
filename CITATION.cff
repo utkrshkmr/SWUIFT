@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use SWUIFT in research, please cite this software."
+title: "SWUIFT: Simulating Wildfire-Urban Interface Fire Transmission"
+type: software
+version: 1.0.0
+authors:
+  - family-names: Elhami-Khorasani
+    given-names: Negar
+    affiliation: University at Buffalo
+license-url: "https://github.com/utkrshkmr/SWUIFT/blob/main/LICENSE"
+repository-code: "https://github.com/utkrshkmr/SWUIFT"
+abstract: >-
+  SWUIFT is software for simulating wildfire-urban interface fire
+  transmission.
+keywords:
+  - wildfire
+  - wildland-urban interface
+  - fire simulation
