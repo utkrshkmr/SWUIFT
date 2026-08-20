@@ -15,10 +15,10 @@ temporary workflow artifacts for archival or cited research.
 | Windows x64 | Signed installer (`.exe`) | `<FUTURE_GITHUB_RELEASE_URL>/download/<VERSION>/<WINDOWS_X64_INSTALLER>` |
 | Windows ARM64 | Application bundle (`.zip`) | `<FUTURE_GITHUB_RELEASE_URL>/download/<VERSION>/<WINDOWS_ARM64_ARCHIVE>` |
 | macOS Apple silicon | Disk image (`.dmg`) | `<FUTURE_GITHUB_RELEASE_URL>/download/<VERSION>/<MACOS_ARM64_DMG>` |
-| Linux | Source release | `<FUTURE_GITHUB_RELEASE_URL>/download/<VERSION>/<SOURCE_ARCHIVE>` |
 
-The Linux workflow is source-based; no native Linux desktop package is
-currently promised.
+Desktop packages are published only for Windows and macOS. Linux users can use
+the CLI from a versioned source release; no Linux desktop application is built
+or supported.
 
 ## Release records
 

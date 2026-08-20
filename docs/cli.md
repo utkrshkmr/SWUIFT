@@ -7,6 +7,25 @@ swuift --help
 python -m swuift --help
 ```
 
+## License consent
+
+Every single, scenario, or batch simulation invocation prints the exact local
+license path and SHA-256 digest, then asks:
+
+```text
+Do you accept the SWUIFT license? [y/N]
+```
+
+Only `y` or `yes` starts the run. Acceptance is not saved. Automation and other
+non-interactive invocations must pass `--accept-license` each time:
+
+```bash
+swuift --accept-license --batch jobs.json
+```
+
+Read the [complete license](license.md). `--help` and `--list-timezones` are
+informational and never prompt.
+
 ## Single-run structure
 
 ```bash

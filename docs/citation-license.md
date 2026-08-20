@@ -68,8 +68,9 @@ release.
   upon use outside the permitted purpose.
 - The signed or packaged license text controls if this summary differs from it.
 
-Before using or sharing SWUIFT, read the complete release license:
-`<FUTURE_IMMUTABLE_LICENSE_URL>`.
+Before using or sharing SWUIFT, read the
+[complete license text](license.md). The same authoritative `LICENSE` file is
+included in the repository root and in every packaged application.
 
 For commercial licensing, contact `techtransfer@buffalo.edu`. For scientific
 questions, contact Prof. Negar Elhami-Khorasani at `negarkho@buffalo.edu`.

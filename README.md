@@ -16,7 +16,7 @@ The polished user guide is built with MkDocs Material:
 
 - [Overview](docs/index.md)
 - [Downloads and immutable release placeholders](docs/downloads.md)
-- [Windows, macOS, and Linux installation](docs/installation.md)
+- [Windows/macOS desktop and cross-platform CLI installation](docs/installation.md)
 - [Quick Start](docs/quick-start.md)
 - [Desktop GUI](docs/gui.md)
 - [CLI](docs/cli.md)
@@ -25,6 +25,7 @@ The polished user guide is built with MkDocs Material:
 - [Expected outputs](docs/outputs.md)
 - [SHA-256 and signature verification](docs/verification.md)
 - [Citation, Zenodo DOI model, and license](docs/citation-license.md)
+- [Complete license text](docs/license.md)
 - [Troubleshooting and contact](docs/troubleshooting.md)
 
 Repository, release, DOI, checksum, and signing-key values marked **FUTURE
@@ -67,6 +68,7 @@ mkdocs build --strict
 
 SWUIFT is source-available under a restrictive research and academic use
 license supplied with each release; it is not open source. See
+[the complete license](LICENSE) and
 [citation and license guidance](docs/citation-license.md). Commercial licensing:
 `techtransfer@buffalo.edu`. Scientific questions: Prof. Negar
 Elhami-Khorasani, `negarkho@buffalo.edu`.

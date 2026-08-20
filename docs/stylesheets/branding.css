@@ -1,0 +1,30 @@
+/* Use the SWUIFT artwork as the complete header identity. */
+.md-header,
+.md-header__inner {
+  min-height: 4rem;
+}
+
+.md-header__button.md-logo {
+  align-items: center;
+  display: flex;
+  margin: 0;
+  padding: 0.2rem 0.6rem 0.2rem 0;
+}
+
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 3.6rem;
+  width: auto;
+}
+
+/* The logo already links to the home page; avoid repeating SWUIFT beside it. */
+.md-header__topic:first-child > .md-ellipsis {
+  display: none;
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-header__button.md-logo img,
+  .md-header__button.md-logo svg {
+    height: 3.2rem;
+  }
+}

@@ -3,6 +3,13 @@
 The desktop application combines six configuration tabs, a live simulation
 log, and a sequential job queue.
 
+## License consent at launch
+
+Every launch begins with a modal dialog containing the complete
+[SWUIFT license](license.md), its exact local file path, and **I Agree** /
+**Decline and Exit** controls. Acceptance is never stored. Declining, closing
+the dialog, or a missing license exits before the main window appears.
+
 ## Standard workflow
 
 1. Select all inputs.

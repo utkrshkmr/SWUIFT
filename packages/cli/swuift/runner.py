@@ -14,6 +14,7 @@ import numpy as np
 from .config import SWUIFTConfig, build_config
 from .data_loader import SWUIFTData, load_all_extracted, load_scenario_data
 from .job import JobSpec, validate_output_dir
+from .license import LicenseInfo
 from .logger import tee_run_output
 from .scenario import load_scenario_manifest
 from .simulation import run_simulation
@@ -59,6 +60,7 @@ def _write_run_params(
     end_ts: datetime,
     elapsed_s: float,
     data: SWUIFTData,
+    license_info: LicenseInfo,
     simulation_metadata: dict[str, Any] | None = None,
 ) -> None:
     payload = {
@@ -67,6 +69,11 @@ def _write_run_params(
         "started_at": start_ts.isoformat(),
         "ended_at": end_ts.isoformat(),
         "elapsed_seconds": elapsed_s,
+        "license": {
+            "accepted": True,
+            "path": str(license_info.path),
+            "sha256": license_info.sha256,
+        },
         "input_files": {
             "fire_prog": job.fire_prog,
             "domains": job.domains,
@@ -135,7 +142,12 @@ def _write_run_params(
         json.dump(payload, f, indent=2)
 
 
-def run_single(job: JobSpec, *, command_line: str) -> str:
+def run_single(
+    job: JobSpec,
+    *,
+    command_line: str,
+    license_info: LicenseInfo,
+) -> str:
     """Run one job and return the run directory path."""
     if (job.out_video or job.out_gif) and not job.out_frames:
         raise ValueError(
@@ -238,8 +250,8 @@ def run_single(job: JobSpec, *, command_line: str) -> str:
             end_ts=end_dt,
             elapsed_s=elapsed_s,
             data=data,
+            license_info=license_info,
             simulation_metadata=simulation_metadata,
         )
         print(f"Completed job: {job.name} in {elapsed_s:.2f}s")
     return run_dir
-

@@ -40,6 +40,13 @@ swuift \
   --frame-dpi 150 --dump-every 0 --no-dump-csv
 ```
 
+Every simulation invocation prints the exact local license path and SHA-256
+digest and asks `Do you accept the SWUIFT license? [y/N]`. Only `y` or `yes`
+continues, and acceptance is not saved. Non-interactive runs must include
+`--accept-license` every time, for example
+`swuift --accept-license --batch jobs.json`. Help and timezone-listing commands
+do not prompt. Read the [complete license](LICENSE).
+
 Replace all angle-bracket placeholders. The CLI accepts
 `YYYY-MM-DD HH:MM`, `YYYY-MM-DDTHH:MM`, or `YYYY-MM-DD HH:MM:SS` as local wall
 time. A separate IANA `--timezone` is required; list every accepted code with

@@ -46,6 +46,10 @@ swuift \
   --checkpoint-every 0
 ```
 
+The command displays the local license path and prompts for acceptance before
+loading the example. For a non-interactive reproduction, add
+`--accept-license`; acceptance applies only to that invocation.
+
 The simulation is intentionally not run by the preparation or packaging
 scripts. `manifest.json` is directly consumable by the public scenario CLI;
 `provenance.json` documents source hashes and transformations without recording

@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import sys
+from typing import NoReturn
 
 from .job import JobSpec, load_jobs, parse_datetime, validate_output_dir
+from .license import LicenseInfo, load_license
 from .logger import format_command
 from .runner import run_single
 from .scenario import build_scenario_job, load_scenario_manifest
@@ -20,8 +22,15 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--batch", help="Path to JSON file containing a jobs array.")
     parser.add_argument("--scenario", choices=("marshall",))
     parser.add_argument("--manifest", help="Path to a scenario manifest JSON file.")
-    parser.add_argument("--data-root", help="Scenario data root (or parent containing scenario folders).")
+    parser.add_argument(
+        "--data-root", help="Scenario data root (or parent containing scenario folders)."
+    )
     parser.add_argument("--job-name", help="Unique name for single-run mode.")
+    parser.add_argument(
+        "--accept-license",
+        action="store_true",
+        help="Accept the bundled SWUIFT license for this non-interactive invocation.",
+    )
     parser.add_argument(
         "--list-timezones",
         action="store_true",
@@ -90,14 +99,46 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--out-gif", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--out-ig-plots", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--out-fire-csv", action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument(
-        "--out-buildings-csv", action=argparse.BooleanOptionalAction, default=True
-    )
+    parser.add_argument("--out-buildings-csv", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--out-rad-steps", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--out-spo-steps", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--checkpoint-every", type=int, default=20)
     parser.add_argument("--forensic-full", action=argparse.BooleanOptionalAction, default=False)
     return parser
+
+
+def _exit_for_license(parser: argparse.ArgumentParser, message: str) -> NoReturn:
+    parser.exit(2, f"swuift: error: {message}\n")
+
+
+def _require_license_acceptance(
+    parser: argparse.ArgumentParser,
+    *,
+    accepted_by_flag: bool,
+) -> LicenseInfo:
+    try:
+        license_info = load_license()
+    except (FileNotFoundError, RuntimeError) as exc:
+        _exit_for_license(parser, str(exc))
+
+    print(f"SWUIFT license: {license_info.path}")
+    print(f"SHA-256: {license_info.sha256}")
+    if accepted_by_flag:
+        print("License accepted for this invocation via --accept-license.")
+        return license_info
+    if not sys.stdin.isatty():
+        _exit_for_license(
+            parser,
+            "non-interactive simulation runs require --accept-license. "
+            f"Read the license at {license_info.path}",
+        )
+    try:
+        response = input("Do you accept the SWUIFT license? [y/N] ")
+    except EOFError:
+        _exit_for_license(parser, "license response was unavailable; simulation cancelled.")
+    if response.strip().lower() not in {"y", "yes"}:
+        _exit_for_license(parser, "license was not accepted; simulation cancelled.")
+    return license_info
 
 
 def _missing_single_fields(args: argparse.Namespace) -> list[str]:
@@ -192,10 +233,18 @@ def main(argv: list[str] | None = None) -> None:
     command_line = format_command(["swuift", *(argv or sys.argv[1:])])
 
     if args.batch:
+        license_info = _require_license_acceptance(
+            parser,
+            accepted_by_flag=args.accept_license,
+        )
         jobs = load_jobs(args.batch)
         for idx, job in enumerate(jobs, start=1):
             print(f"[{idx}/{len(jobs)}] Executing {job.name}")
-            run_single(job, command_line=f"{command_line} --job {job.name}")
+            run_single(
+                job,
+                command_line=f"{command_line} --job {job.name}",
+                license_info=license_info,
+            )
         return
 
     if args.scenario or args.manifest:
@@ -203,6 +252,10 @@ def main(argv: list[str] | None = None) -> None:
             parser.error("Use either --scenario or --manifest, not both.")
         if not args.data_root or not args.output_dir:
             parser.error("Scenario mode requires --data-root and --output-dir.")
+        license_info = _require_license_acceptance(
+            parser,
+            accepted_by_flag=args.accept_license,
+        )
         manifest = load_scenario_manifest(args.manifest or args.scenario)
         job = build_scenario_job(
             manifest,
@@ -219,11 +272,19 @@ def main(argv: list[str] | None = None) -> None:
             checkpoint_every=args.checkpoint_every,
             forensic_full=args.forensic_full,
         )
-        run_single(job, command_line=command_line)
+        run_single(job, command_line=command_line, license_info=license_info)
         return
 
+    missing = _missing_single_fields(args)
+    if missing:
+        joined = ", ".join(f"--{name.replace('_', '-')}" for name in missing)
+        parser.error(f"Single-run mode is missing required parameters: {joined}")
+    license_info = _require_license_acceptance(
+        parser,
+        accepted_by_flag=args.accept_license,
+    )
     job = _build_single_job(args)
-    run_single(job, command_line=command_line)
+    run_single(job, command_line=command_line, license_info=license_info)
 
 
 if __name__ == "__main__":

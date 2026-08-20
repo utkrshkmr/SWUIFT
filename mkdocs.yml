@@ -33,11 +33,14 @@ theme:
         icon: material/weather-sunny
         name: Use light mode
 
+extra_css:
+  - stylesheets/branding.css
+
 nav:
   - Overview: index.md
   - Downloads: downloads.md
   - Install:
-      - Windows, macOS, Linux: installation.md
+      - Installation: installation.md
       - Verify a release: verification.md
   - Use:
       - Quick Start: quick-start.md
@@ -49,6 +52,7 @@ nav:
       - Expected outputs: outputs.md
   - Project:
       - Citation, DOI & license: citation-license.md
+      - Complete license: license.md
       - Troubleshooting & contact: troubleshooting.md
 
 markdown_extensions:

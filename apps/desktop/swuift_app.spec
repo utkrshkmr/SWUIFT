@@ -68,6 +68,7 @@ a = Analysis(
         "swuift",
         "swuift.config",
         "swuift.data_loader",
+        "swuift.license",
         "swuift.plotting",
         "swuift.scenario",
         "swuift.simulation",

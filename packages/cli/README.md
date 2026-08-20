@@ -18,6 +18,11 @@ The workflow supports:
 - Multi-run sequential experiments from JSON
 - Full run metadata logging for reproducibility
 
+Every simulation invocation displays the bundled license path and digest and
+requires `y`/`yes` acceptance. Acceptance is not saved. Redirected,
+non-interactive, and automated runs must pass `--accept-license` each time,
+for example `swuift --accept-license --batch jobs_example.json`.
+
 ## 1) What You Need
 
 - A Linux machine, macOS machine, or Windows machine with terminal access
@@ -252,7 +257,7 @@ nohup swuift --job-name baseline ... --output-dir /mnt/swuift_runs > /mnt/swuift
 ### Batch-run nohup
 
 ```bash
-nohup swuift --batch ./jobs_example.json > /mnt/swuift_runs/nohup_batch.log 2>&1 &
+nohup swuift --accept-license --batch ./jobs_example.json > /mnt/swuift_runs/nohup_batch.log 2>&1 &
 ```
 
 Monitor progress:

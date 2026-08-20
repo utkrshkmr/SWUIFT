@@ -1,6 +1,7 @@
 # Installation
 
 Verify downloaded files before opening them. See [Verify a release](verification.md).
+Read the [complete SWUIFT license](license.md) before running the software.
 
 ## Windows
 
@@ -34,7 +35,7 @@ If macOS blocks first launch, open **System Settings → Privacy & Security** an
 review the message. Proceed only if the package digest and publisher identity
 match the release record. Intel Macs do not have a promised packaged build.
 
-## Linux and source installation
+## Linux CLI and source installation
 
 Python 3.10 or newer is required. From a versioned source archive or an exact
 release checkout:
@@ -47,15 +48,9 @@ python -m pip install -r requirements.txt
 swuift --help
 ```
 
-Launch the desktop interface:
-
-```bash
-cd apps/desktop
-python swuift_app.py
-```
-
-On Linux, the desktop requires a working graphical session and system
-libraries required by Qt. The CLI can run without a desktop session.
+Linux is supported through the command-line interface. SWUIFT does not publish
+or support a Linux desktop application; desktop releases are limited to macOS
+and Windows.
 
 ## Source installation on PowerShell
 
@@ -79,3 +74,13 @@ swuift --help
 
 Use a fresh environment for each released SWUIFT version. Do not mix packages
 from different checkouts.
+
+## Local license file
+
+- Source checkouts keep the authoritative file at `<SWUIFT_ROOT>/LICENSE`.
+- Installed Python wheels keep it under the distribution metadata
+  `swuift-<version>.dist-info/licenses/LICENSE`.
+- Desktop bundles include `LICENSE` in their internal resource directory.
+
+The desktop startup dialog and CLI prompt display the exact absolute path used
+on the current machine. SWUIFT fails closed if that file is missing or unreadable.

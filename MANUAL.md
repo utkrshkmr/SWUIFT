@@ -18,6 +18,9 @@ python swuift_app.py
 ```
 
 Platform-specific steps are in the [installation guide](docs/installation.md).
+Every launch displays the complete [SWUIFT license](LICENSE) and its exact local
+path. Choose **I Agree** to open the main window. Acceptance is not saved;
+declining or closing the dialog exits the application.
 
 ## Run a simulation
 
@@ -51,6 +54,7 @@ For the 121-state window from `2021-12-30T18:00Z` through
 - [Expected outputs](docs/outputs.md)
 - [Troubleshooting and contact](docs/troubleshooting.md)
 - [Research and academic use license](docs/citation-license.md)
+- [Complete license text](docs/license.md)
 
 SWUIFT is research software, not an operational forecasting or life-safety
 system.
