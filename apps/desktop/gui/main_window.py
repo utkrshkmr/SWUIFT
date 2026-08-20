@@ -1,12 +1,40 @@
 from __future__ import annotations
+
 import json
 import os
-from datetime import datetime
+
 from PySide6.QtCore import QSettings, Qt, QTimer
 from PySide6.QtGui import QAction, QIcon
-from PySide6.QtWidgets import QApplication, QDockWidget, QFileDialog, QHBoxLayout, QHeaderView, QLabel, QMainWindow, QMenu, QMessageBox, QProgressBar, QPushButton, QScrollArea, QSizePolicy, QSplitter, QTabWidget, QTableView, QTextEdit, QToolBar, QVBoxLayout, QWidget
-from .app import APP_DIR, APP_VERSION, BUILD_ID, RESOURCE_DIR, _ICON_PATH
-from .job_queue import JobConfig, JobQueueModel, STATUS_DONE, STATUS_FAILED, STATUS_PENDING, STATUS_RUNNING, _COL_OUTDIR
+from PySide6.QtWidgets import (
+    QApplication,
+    QDockWidget,
+    QFileDialog,
+    QHBoxLayout,
+    QHeaderView,
+    QLabel,
+    QMainWindow,
+    QMenu,
+    QMessageBox,
+    QProgressBar,
+    QPushButton,
+    QSplitter,
+    QTableView,
+    QTabWidget,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
+from .app import _ICON_PATH, APP_DIR, APP_VERSION, BUILD_ID, RESOURCE_DIR
+from .job_queue import (
+    _COL_OUTDIR,
+    STATUS_DONE,
+    STATUS_FAILED,
+    STATUS_PENDING,
+    STATUS_RUNNING,
+    JobConfig,
+    JobQueueModel,
+)
 from .job_runner import JobRunner
 from .tabs.data_inputs_tab import DataInputsTab
 from .tabs.firebrands_tab import FirebrandsTab
@@ -14,6 +42,7 @@ from .tabs.grid_time_tab import GridTimeTab
 from .tabs.hardening_tab import HardeningTab
 from .tabs.output_tab import OutputTab
 from .tabs.radiation_tab import RadiationTab
+
 _ORG = 'SWUIFT'
 _APP = 'SWUIFT'
 
@@ -160,7 +189,11 @@ class MainWindow(QMainWindow):
             if ret != QMessageBox.StandardButton.Yes:
                 return
         data_p = self._data_tab.get_data_params()
-        grid_p = self._grid_tab.get_params()
+        try:
+            grid_p = self._grid_tab.get_params()
+        except ValueError as exc:
+            QMessageBox.warning(self, 'Invalid Simulation Time', str(exc))
+            return
         rad_p = self._rad_tab.get_params()
         fb_p = self._fb_tab.get_params()
         hard_p = self._hard_tab.get_params()
@@ -172,7 +205,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, 'Invalid Output Folder', str(exc))
             return
         scenario = data_p.get('mode') == 'scenario'
-        job = JobConfig(data_mode=data_p.get('mode', 'extracted'), scenario_id=data_p.get('scenario_id', '') if scenario else '', data_root=data_p.get('data_root', '') if scenario else '', wildland_fire_matrix=data_p.get('wildland_fire_matrix', ''), domain_matrix=data_p.get('domain_matrix', ''), binary_cover=data_p.get('binary_cover', ''), homes_matrix=data_p.get('homes_matrix', ''), latitude=data_p.get('latitude', ''), longitude=data_p.get('longitude', ''), radiation_matrix=data_p.get('radiation_matrix', ''), spotting_matrix=data_p.get('spotting_matrix', ''), water_matrix=data_p.get('water_matrix', ''), wind_file=data_p.get('wind_file', ''), t_start=grid_p['t_start'], t_end=grid_p['t_end'], maxstep=grid_p['maxstep'], grid_size=grid_p['grid_size'], rad_energy_ig=rad_p['rad_energy_ig'], rad_rf=rad_p['rad_rf'], fb_wind_coef=fb_p['fb_wind_coef'], fb_wind_sd=fb_p['fb_wind_sd'], fb_wind_sd_transverse=fb_p['fb_wind_sd_transverse'], hardening_rad=hard_p['hardening_rad'], hardening_spo=hard_p['hardening_spo'], seed_hardening=hard_p['seed_hardening'], seed_spread=hard_p['seed_spread'], hardening_profile='matlab_inert' if scenario else 'matlab_active', rng_profile='seeded', output_dir=out_params['output_dir'], make_video=out_params['make_video'], dpi_hires=out_params['dpi_hires'], dump_interval=out_params['dump_interval'], dump_csv=out_params['dump_csv'], lazy_wind=out_params['lazy_wind'], dump_radiation_csv=out_params['dump_radiation_csv'], dump_spotting_csv=out_params['dump_spotting_csv'])
+        job = JobConfig(data_mode=data_p.get('mode', 'extracted'), scenario_id=data_p.get('scenario_id', '') if scenario else '', data_root=data_p.get('data_root', '') if scenario else '', wildland_fire_matrix=data_p.get('wildland_fire_matrix', ''), domain_matrix=data_p.get('domain_matrix', ''), binary_cover=data_p.get('binary_cover', ''), homes_matrix=data_p.get('homes_matrix', ''), latitude=data_p.get('latitude', ''), longitude=data_p.get('longitude', ''), radiation_matrix=data_p.get('radiation_matrix', ''), spotting_matrix=data_p.get('spotting_matrix', ''), water_matrix=data_p.get('water_matrix', ''), wind_file=data_p.get('wind_file', ''), t_start=grid_p['t_start'], t_end=grid_p['t_end'], timezone=grid_p['timezone'], maxstep=grid_p['maxstep'], grid_size=grid_p['grid_size'], rad_energy_ig=rad_p['rad_energy_ig'], rad_rf=rad_p['rad_rf'], fb_wind_coef=fb_p['fb_wind_coef'], fb_wind_sd=fb_p['fb_wind_sd'], fb_wind_sd_transverse=fb_p['fb_wind_sd_transverse'], hardening_rad=hard_p['hardening_rad'], hardening_spo=hard_p['hardening_spo'], seed_hardening=hard_p['seed_hardening'], seed_spread=hard_p['seed_spread'], hardening_profile='matlab_inert' if scenario else 'matlab_active', rng_profile='seeded', output_dir=out_params['output_dir'], make_video=out_params['make_video'], dpi_hires=out_params['dpi_hires'], dump_interval=out_params['dump_interval'], dump_csv=out_params['dump_csv'], lazy_wind=out_params['lazy_wind'], dump_radiation_csv=out_params['dump_radiation_csv'], dump_spotting_csv=out_params['dump_spotting_csv'])
         self._queue_model.append_job(job)
         self.statusBar().showMessage(f'Job #{job.job_id} added to queue.')
         self._run_btn.setEnabled(True)
@@ -356,6 +389,22 @@ class MainWindow(QMainWindow):
         job = self._queue_model.job_at(index.row())
         if job and job.status == STATUS_FAILED and job.error_msg:
             self._show_error(job)
+            return
+        if job:
+            from swuift.timezones import local_to_utc, utc_isoformat
+
+            start_utc = utc_isoformat(local_to_utc(job.t_start, job.timezone))
+            end_utc = utc_isoformat(local_to_utc(job.t_end, job.timezone))
+            QMessageBox.information(
+                self,
+                f'Job #{job.job_id}',
+                f'Status: {job.status}\n'
+                f'Local time: {job.t_start.isoformat(sep=" ")} → '
+                f'{job.t_end.isoformat(sep=" ")}\n'
+                f'Timezone: {job.timezone}\n'
+                f'UTC: {start_utc} → {end_utc}\n'
+                f'Steps: {job.maxstep}',
+            )
 
     def _show_error(self, job: JobConfig) -> None:
         dlg = QMessageBox(self)
@@ -411,7 +460,7 @@ class MainWindow(QMainWindow):
 
     def _collect_all_settings(self) -> dict:
         grid_p = self._grid_tab.get_params()
-        return {'data': self._data_tab.get_data_params(), 'grid': {'t_start': grid_p['t_start'].isoformat() if grid_p['t_start'] else None, 't_end': grid_p['t_end'].isoformat() if grid_p['t_end'] else None, 'maxstep': grid_p['maxstep'], 'grid_size': grid_p['grid_size']}, 'radiation': self._rad_tab.get_params(), 'firebrands': self._fb_tab.get_params(), 'hardening': self._hard_tab.get_params(), 'output': self._out_tab.get_params()}
+        return {'data': self._data_tab.get_data_params(), 'grid': {'t_start': grid_p['t_start'].isoformat() if grid_p['t_start'] else None, 't_end': grid_p['t_end'].isoformat() if grid_p['t_end'] else None, 'timezone': grid_p['timezone'], 'maxstep': grid_p['maxstep'], 'grid_size': grid_p['grid_size']}, 'radiation': self._rad_tab.get_params(), 'firebrands': self._fb_tab.get_params(), 'hardening': self._hard_tab.get_params(), 'output': self._out_tab.get_params()}
 
     def _apply_all_settings(self, d: dict) -> None:
         if 'data' in d:

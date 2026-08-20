@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 import copy
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import List, Optional
+
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PySide6.QtGui import QBrush, QColor
+
 STATUS_PENDING = 'Pending'
 STATUS_RUNNING = 'Running'
 STATUS_DONE = 'Done'
@@ -61,6 +64,7 @@ class JobConfig:
     wind_file: str = ''
     t_start: datetime = field(default_factory=lambda: datetime(2025, 1, 7, 18, 20))
     t_end: datetime = field(default_factory=lambda: datetime(2025, 1, 8, 14, 20))
+    timezone: str = 'UTC'
     maxstep: Optional[int] = None
     grid_size: float = 10.0
     hardening_profile: str = 'matlab_active'

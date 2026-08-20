@@ -17,7 +17,8 @@ swuift \
   --harden-rad-map <PATH> --harden-spo-map <PATH> \
   --water <PATH> --wind <PATH> \
   --grid-size 10 \
-  --t-start "2021-12-30 18:00" --t-end "2021-12-31 04:00" \
+  --t-start "2021-12-30 11:00" --t-end "2021-12-30 21:00" \
+  --timezone America/Denver \
   --harden-rad 70 --harden-spo 70 \
   --rad-ig-thresh 14000 --rad-decay 1.0 \
   --brand-wind-coef 30 --brand-wind-sd 0.3 \
@@ -37,15 +38,25 @@ the installed CLI package tree.
 |---|---|
 | Identity | `--job-name` |
 | Inputs | `--fire-prog`, `--domains`, `--landcover`, `--homes`, `--lat`, `--lon`, `--harden-rad-map`, `--harden-spo-map`, `--water`, `--wind` |
-| Grid/time | `--grid-size`, `--t-start`, `--t-end` |
+| Grid/time | `--grid-size`, `--t-start`, `--t-end`, `--timezone` |
 | Model | `--harden-rad`, `--harden-spo`, `--rad-ig-thresh`, `--rad-decay`, `--brand-wind-coef`, `--brand-wind-sd`, `--brand-wind-sd-lat` |
 | Reproducibility | `--seed-harden`, `--seed-spread` |
 | Execution | `--lazy-wind` or `--no-lazy-wind`, `--output-dir`, `--frame-dpi`, `--dump-every`, `--dump-csv` or `--no-dump-csv` |
 
 Accepted time syntax is `YYYY-MM-DD HH:MM`, `YYYY-MM-DDTHH:MM`, or
-`YYYY-MM-DD HH:MM:SS`. The parser does not accept a trailing `Z` or timezone
-offset. When a dataset uses UTC, enter the values without `Z` and record that
-UTC convention with the run.
+`YYYY-MM-DD HH:MM:SS`. Values are local wall times in the required IANA
+`--timezone`. The parser does not accept a trailing `Z`, numeric offset, or
+ambiguous abbreviation. SWUIFT rejects nonexistent and ambiguous
+daylight-saving transition times, converts valid inputs to UTC for simulation,
+and displays results in the entered timezone.
+
+List every accepted identifier with:
+
+```bash
+swuift --list-timezones
+```
+
+The complete list is also available on the [Timezone codes](timezones.md) page.
 
 ## Output switches
 
@@ -88,8 +99,9 @@ required in each job; output switches are optional.
       "water": "<PATH>",
       "wind": "<PATH>",
       "grid_size": 10,
-      "t_start": "2021-12-30 18:00",
-      "t_end": "2021-12-31 04:00",
+      "t_start": "2021-12-30 11:00",
+      "t_end": "2021-12-30 21:00",
+      "timezone": "America/Denver",
       "harden_rad": 70,
       "harden_spo": 70,
       "rad_ig_thresh": 14000,

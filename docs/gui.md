@@ -22,7 +22,11 @@ path exists before a job can be queued. See [Input schema](input-schema.md).
 ### Grid & Time
 
 Start and end are inclusive. Both must align to the fixed five-minute timestep.
-The panel reports the duration and calculated number of states.
+Select a required IANA timezone from the searchable list; the date/time fields
+are interpreted as local wall times in that zone. The panel previews the UTC
+conversion, duration, and calculated number of states. Invalid, ambiguous, and
+nonexistent daylight-saving times cannot be queued. See
+[Timezone codes](timezones.md).
 
 ### Radiation
 
@@ -78,4 +82,4 @@ another computer.
 - Keep the input-bundle identifier and checksums.
 - Save the settings JSON.
 - Preserve `run_params.json` and `run_log.txt`.
-- Record platform, seed values, and whether lazy wind was enabled.
+- Record platform, timezone, seed values, and whether lazy wind was enabled.

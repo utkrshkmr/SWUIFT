@@ -47,8 +47,15 @@ window only when scientifically appropriate or obtain the complete bundle.
 **Integer timestep or time-alignment error**
 
 Start and end must be on five-minute boundaries and the duration must be
-divisible by five minutes. The CLI does not accept `Z`; omit it while recording
-the UTC convention separately.
+divisible by five minutes after conversion from the required IANA timezone to
+UTC. Do not append `Z` or a numeric offset; provide `--timezone` separately.
+
+**Unknown, ambiguous, or nonexistent timezone value**
+
+Use an exact identifier from `swuift --list-timezones` or the
+[Timezone codes](timezones.md) page. Abbreviations such as `CST` are ambiguous.
+During daylight-saving transitions, choose a different unambiguous wall time;
+SWUIFT will not guess which instant was intended.
 
 ## Runtime and outputs
 

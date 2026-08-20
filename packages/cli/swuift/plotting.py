@@ -4,14 +4,17 @@ from __future__ import annotations
 
 import os
 import subprocess
-from datetime import datetime, timedelta
-from typing import List, Optional, Sequence
+from datetime import datetime
+from typing import List
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import matplotlib.pyplot as plt
 import numpy as np
+
+from .timezones import format_local_time
 
 # ── colour map ────────────────────────────────────────────────────────────────
 
@@ -201,10 +204,15 @@ def save_snapshot(
     water: np.ndarray,
     frames_dir: str,
     dpi: int = 600,
+    display_timezone: str = "UTC",
 ) -> None:
     """Save a single high-res frame for one timestep (MATLAB-style output retired)."""
     plt_mat = build_plt_mat(rows, cols, binary_cover, ignition, fire, fstep, lstep, water)
-    ts_str = sim_time.strftime("%H:%M") + " MST"
+    ts_str = format_local_time(
+        sim_time,
+        display_timezone,
+        format_string="%Y-%m-%d %H:%M",
+    )
     fname = f"{tstep:04d}.png"
     render_snapshot_hires(plt_mat, long, lati, ts_str,
                           os.path.join(frames_dir, fname), dpi=dpi)

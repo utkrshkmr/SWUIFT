@@ -10,17 +10,16 @@ Key optimizations over the base PROTOTYPE:
 
 from __future__ import annotations
 
-import os
-import time
 import csv
 import json
+import os
+import time
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from datetime import datetime, timedelta
-from typing import Callable, Dict, List, Set, Tuple
+from typing import Callable, Dict, Set, Tuple
 
 import numpy as np
-
 from swuift_core.hardening import apply_hardening_profile
 from swuift_core.spread import brand_gen, brand_ig, radiation_gen, radiation_ig
 
@@ -28,10 +27,15 @@ from .config import SWUIFTConfig
 from .data_loader import SWUIFTData
 from .plotting import (
     assemble_video,
+    build_plt_mat,
     plot_pixel_ignitions,
     plot_structure_ignitions,
-    build_plt_mat,
     save_snapshot,
+)
+from .timezones import (
+    format_local_time,
+    localized_timestamp,
+    utc_to_local,
 )
 
 
@@ -83,6 +87,7 @@ def _render_step_window(
     tstep: int,
     maxstep: int,
     sim_time: datetime,
+    display_timezone: str,
     ig_known_step: int,
     ig_dev_step: int,
     ig_rad_step: int,
@@ -99,7 +104,7 @@ def _render_step_window(
     lines = [
         "+" + ("-" * 86) + "+",
         f"| Progress {bar} {tstep:>3}/{maxstep:<3} ({pct:6.2f}%)",
-        f"| Time      {sim_time.strftime('%Y/%m/%d %H:%M')}",
+        f"| Time      {format_local_time(sim_time, display_timezone)}",
         (
             "| Ignitions  "
             f"known:+{ig_known_step}  dev:+{ig_dev_step}  rad:+{ig_rad_step}  "
@@ -213,6 +218,7 @@ def run_simulation(
     progress_callback: Callable[[int, int], None] | None = None,
     cancellation_callback: Callable[[], bool] | None = None,
     phase_callback: Callable[[str], None] | None = None,
+    display_timezone: str = "UTC",
 ) -> dict:
     """Execute the full SWUIFT simulation with all optimizations.
 
@@ -317,8 +323,9 @@ def run_simulation(
     _write_log(f"Spread loop begins at: {datetime.now()}\n")
     _write_log("################################\n")
     _write_log(f"grid cell size = {cfg.grid_size} m\n")
-    _write_log(f"start time = {cfg.t_start.strftime('%Y/%m/%d %H:%M')}\n")
-    _write_log(f"end time = {cfg.t_end.strftime('%Y/%m/%d %H:%M')}\n")
+    _write_log(f"simulation timezone = {display_timezone}\n")
+    _write_log(f"start time = {format_local_time(cfg.t_start, display_timezone)}\n")
+    _write_log(f"end time = {format_local_time(cfg.t_end, display_timezone)}\n")
     _write_log(f"time step = {cfg.t_step_min} minutes\n")
     _write_log(f"Fully developed phase between steps {fstep} and {lstep}\n")
     _write_log(f"threshold for ignition due to radiation = {cfg.rad_ig_thresh}\n")
@@ -459,6 +466,7 @@ def run_simulation(
             tstep=tstep,
             maxstep=maxstep,
             sim_time=sim_time,
+            display_timezone=display_timezone,
             ig_known_step=int(ig_known[tstep - 1]),
             ig_dev_step=int(ig_dev[tstep - 1]),
             ig_rad_step=int(ig_rad[tstep - 1]),
@@ -497,9 +505,14 @@ def run_simulation(
             f"state_{int(value)}_cells": int(count)
             for value, count in zip(category_values, category_counts)
         }
+        timestamp = localized_timestamp(sim_time, display_timezone)
         metric = {
             "tstep": tstep,
             "sim_time": sim_time.isoformat(sep=" "),
+            "sim_time_utc": timestamp["utc"],
+            "sim_time_local": timestamp["local"],
+            "sim_time_timezone": timestamp["timezone"],
+            "sim_time_offset": timestamp["offset"],
             "elapsed_minutes": float((tstep - 1) * cfg.t_step_min),
             "progress_fraction": float(tstep / maxstep),
             "ig_known": int(ig_known[tstep - 1]),
@@ -557,6 +570,7 @@ def run_simulation(
                 data.water,
                 frames_dir,
                 frame_dpi,
+                display_timezone,
             )
             render_futures.append(render_pool.submit(save_snapshot, *snap_args))
 
@@ -630,7 +644,10 @@ def run_simulation(
     # ── summary plots ─────────────────────────────────────────────────────
     step_size = max(1, maxstep // 6)
     tick_positions = list(range(1, maxstep + 1, step_size))
-    time_labels = [t_num_vec[k - 1].strftime("%H:%M") for k in tick_positions]
+    time_labels = [
+        utc_to_local(t_num_vec[k - 1], display_timezone).strftime("%H:%M %Z")
+        for k in tick_positions
+    ]
 
     if out_ig_plots:
         plot_pixel_ignitions(
@@ -655,6 +672,7 @@ def run_simulation(
                 {
                     "schema_version": 1,
                     "scenario": getattr(cfg, "scenario_id", None),
+                    "display_timezone": display_timezone,
                     "effective_spread_seed": effective_spread_seed,
                     "steps": step_metrics,
                 },

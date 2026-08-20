@@ -65,6 +65,11 @@ Start and end must fall on five-minute boundaries and the duration must be
 divisible by five minutes. The Marshall tutorial uses ten hours:
 `600 / 5 + 1 = 121` states.
 
+Every run must also provide an [IANA timezone](timezones.md). SWUIFT interprets
+the entered timestamps in that zone, rejects ambiguous or nonexistent
+daylight-saving wall times, then converts the interval to UTC before calculating
+states and indexing wind. Input wind slice zero remains simulation state one.
+
 ## Data provenance
 
 For reproducible work, record:

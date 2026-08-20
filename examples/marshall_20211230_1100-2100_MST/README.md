@@ -3,6 +3,8 @@
 This is a Python-only, 121-timestep Marshall input example. The 5-minute
 timesteps are inclusive from `2021-12-30T18:00:00Z` through
 `2021-12-31T04:00:00Z` (11:00–21:00 MST).
+Enter `2021-12-30 11:00` through `2021-12-30 21:00` with the required IANA
+timezone `America/Denver`; SWUIFT converts that interval to UTC internally.
 
 Binary inputs are generated under the Git-ignored
 `examples/artifacts/marshall_20211230_1100-2100_MST/` directory. The example

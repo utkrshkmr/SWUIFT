@@ -9,6 +9,7 @@ from .job import JobSpec, load_jobs, parse_datetime, validate_output_dir
 from .logger import format_command
 from .runner import run_single
 from .scenario import build_scenario_job, load_scenario_manifest
+from .timezones import timezone_catalog, validate_timezone
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -21,6 +22,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--manifest", help="Path to a scenario manifest JSON file.")
     parser.add_argument("--data-root", help="Scenario data root (or parent containing scenario folders).")
     parser.add_argument("--job-name", help="Unique name for single-run mode.")
+    parser.add_argument(
+        "--list-timezones",
+        action="store_true",
+        help="List every supported IANA timezone identifier and exit.",
+    )
 
     # Input files
     parser.add_argument("--fire-prog")
@@ -36,8 +42,21 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # Required hyperparameters
     parser.add_argument("--grid-size", type=float)
-    parser.add_argument("--t-start", type=parse_datetime)
-    parser.add_argument("--t-end", type=parse_datetime)
+    parser.add_argument(
+        "--t-start",
+        type=parse_datetime,
+        help="Simulation start as local wall time (YYYY-MM-DD HH:MM).",
+    )
+    parser.add_argument(
+        "--t-end",
+        type=parse_datetime,
+        help="Simulation end as local wall time (YYYY-MM-DD HH:MM).",
+    )
+    parser.add_argument(
+        "--timezone",
+        type=validate_timezone,
+        help="Required IANA timezone for --t-start/--t-end, for example America/Denver.",
+    )
     parser.add_argument("--harden-rad", type=float)
     parser.add_argument("--harden-spo", type=float)
     parser.add_argument("--rad-ig-thresh", type=float)
@@ -97,6 +116,7 @@ def _missing_single_fields(args: argparse.Namespace) -> list[str]:
         "grid_size",
         "t_start",
         "t_end",
+        "timezone",
         "harden_rad",
         "harden_spo",
         "rad_ig_thresh",
@@ -135,6 +155,7 @@ def _build_single_job(args: argparse.Namespace) -> JobSpec:
         grid_size=args.grid_size,
         t_start=args.t_start,
         t_end=args.t_end,
+        timezone=args.timezone,
         harden_rad=args.harden_rad,
         harden_spo=args.harden_spo,
         rad_ig_thresh=args.rad_ig_thresh,
@@ -165,6 +186,9 @@ def _build_single_job(args: argparse.Namespace) -> JobSpec:
 def main(argv: list[str] | None = None) -> None:
     parser = _build_parser()
     args = parser.parse_args(argv)
+    if args.list_timezones:
+        print("\n".join(timezone_catalog()))
+        return
     command_line = format_command(["swuift", *(argv or sys.argv[1:])])
 
     if args.batch:

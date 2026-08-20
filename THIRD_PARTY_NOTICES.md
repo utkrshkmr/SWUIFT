@@ -18,6 +18,8 @@ transitive dependencies must also be reviewed for each release.
 - PySide6 / Qt — LGPLv3, GPLv3, or applicable commercial terms, depending on
   use and distribution
 - Pillow — HPND
+- tzdata (Python package) — Apache License 2.0; bundled IANA timezone database
+  files remain subject to their upstream notices
 
 Development and build tools are not part of the SWUIFT runtime distribution
 unless a release artifact bundles them.

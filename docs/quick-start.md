@@ -9,8 +9,8 @@ geospatial or wind data.
 1. Open **SWUIFT – Wildfire Spread Simulation**.
 2. On **Data Inputs**, select all ten files described in the
    [input schema](input-schema.md).
-3. On **Grid & Time**, enter start and end values aligned to five-minute
-   boundaries.
+3. On **Grid & Time**, select the required [IANA timezone](timezones.md), then
+   enter local start and end values aligned to five-minute boundaries.
 4. On **Output Settings**, choose a writable output folder. Enable **Lazy
    Wind** when memory is limited.
 5. Click **Add to Queue**, then **Run All**.
@@ -47,8 +47,9 @@ input paths, explicit model settings, and an output directory:
       "water": "<INPUT_DIR>/water_matrix.mat",
       "wind": "<INPUT_DIR>/wind.mat",
       "grid_size": 10,
-      "t_start": "2021-12-30 18:00",
-      "t_end": "2021-12-31 04:00",
+      "t_start": "2021-12-30 11:00",
+      "t_end": "2021-12-30 21:00",
+      "timezone": "America/Denver",
       "harden_rad": 70,
       "harden_spo": 70,
       "rad_ig_thresh": 14000,

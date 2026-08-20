@@ -18,6 +18,12 @@ Treat directory timestamps as labels, not stable identifiers.
 
 Review and preserve these records for every run.
 
+Simulation timestamps are computed in UTC. Logs, frame titles, and plot labels
+use the timezone selected by the user. Metrics retain the legacy UTC
+`sim_time` field and add explicit `sim_time_utc`, `sim_time_local`,
+`sim_time_timezone`, and `sim_time_offset` fields. `run_params.json` records
+both UTC and localized simulation bounds.
+
 ## Standard scientific outputs
 
 | Path | Contents |

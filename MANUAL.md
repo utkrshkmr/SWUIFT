@@ -22,8 +22,9 @@ Platform-specific steps are in the [installation guide](docs/installation.md).
 ## Run a simulation
 
 1. On **Data Inputs**, select all ten required files.
-2. On **Grid & Time**, enter inclusive start and end times aligned to
-   five-minute boundaries.
+2. On **Grid & Time**, select a required IANA timezone and enter inclusive
+   local start and end times aligned to five-minute boundaries. Confirm the UTC
+   preview before queueing the job.
 3. Configure radiation, firebrands, hardening, and random-number seeds.
 4. On **Output Settings**, choose a writable output directory and requested
    artifacts.
@@ -46,6 +47,7 @@ For the 121-state window from `2021-12-30T18:00Z` through
 
 - [Desktop GUI controls](docs/gui.md)
 - [Input schema](docs/input-schema.md)
+- [Supported timezone codes](docs/timezones.md)
 - [Expected outputs](docs/outputs.md)
 - [Troubleshooting and contact](docs/troubleshooting.md)
 - [Research and academic use license](docs/citation-license.md)

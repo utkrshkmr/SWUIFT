@@ -7,6 +7,7 @@ block_cipher = None
 
 _imageio_ffmpeg_datas = collect_data_files("imageio_ffmpeg", includes=["*.exe", "ffmpeg*"])
 _swuift_datas = collect_data_files("swuift", includes=["resources/scenarios/*.json"])
+_tzdata_datas = collect_data_files("tzdata")
 _desktop = Path.cwd().resolve()
 _root = _desktop.parent.parent
 _legal_datas = [
@@ -37,7 +38,9 @@ a = Analysis(
         ("gui", "gui"),
         *_imageio_ffmpeg_datas,
         *_swuift_datas,
+        *_tzdata_datas,
         *copy_metadata("swuift"),
+        *copy_metadata("tzdata"),
         *_legal_datas,
         *_generated_datas,
     ],
@@ -68,6 +71,8 @@ a = Analysis(
         "swuift.plotting",
         "swuift.scenario",
         "swuift.simulation",
+        "swuift.timezones",
+        "tzdata",
         "swuift_core",
         "swuift_core.kernels",
         "swuift_core.spread",

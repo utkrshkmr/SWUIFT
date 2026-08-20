@@ -15,8 +15,9 @@ from .config import SWUIFTConfig, build_config
 from .data_loader import SWUIFTData, load_all_extracted, load_scenario_data
 from .job import JobSpec, validate_output_dir
 from .logger import tee_run_output
-from .simulation import run_simulation
 from .scenario import load_scenario_manifest
+from .simulation import run_simulation
+from .timezones import local_to_utc, localized_timestamp, utc_isoformat
 
 
 def _timestamp() -> str:
@@ -82,6 +83,11 @@ def _write_run_params(
             "grid_size": cfg.grid_size,
             "t_start": cfg.t_start.isoformat(sep=" "),
             "t_end": cfg.t_end.isoformat(sep=" "),
+            "timezone": job.timezone,
+            "t_start_utc": utc_isoformat(cfg.t_start),
+            "t_end_utc": utc_isoformat(cfg.t_end),
+            "t_start_local": localized_timestamp(cfg.t_start, job.timezone)["local"],
+            "t_end_local": localized_timestamp(cfg.t_end, job.timezone)["local"],
             "max_steps": cfg.maxstep,
             "harden_rad": cfg.harden_rad,
             "harden_spo": cfg.harden_spo,
@@ -141,7 +147,7 @@ def run_single(job: JobSpec, *, command_line: str) -> str:
     with tee_run_output(run_dir, command_line):
         print(f"Starting job: {job.name}")
         print(f"Run directory: {run_dir}")
-        start_dt = datetime.now()
+        start_dt = datetime.now().astimezone()
         t0 = time.time()
 
         manifest = None
@@ -166,10 +172,12 @@ def run_single(job: JobSpec, *, command_line: str) -> str:
                 wind_file=job.wind,
                 preload_wind=not job.lazy_wind,
             )
+        t_start_utc = local_to_utc(job.t_start, job.timezone)
+        t_end_utc = local_to_utc(job.t_end, job.timezone)
         cfg = build_config(
             grid_size=job.grid_size,
-            t_start=job.t_start,
-            t_end=job.t_end,
+            t_start=t_start_utc,
+            t_end=t_end_utc,
             harden_rad=job.harden_rad,
             harden_spo=job.harden_spo,
             rad_ig_thresh=job.rad_ig_thresh,
@@ -214,12 +222,13 @@ def run_single(job: JobSpec, *, command_line: str) -> str:
                 emit_frame_state=job.emit_frame_state,
                 checkpoint_every=job.checkpoint_every,
                 forensic_full=job.forensic_full,
+                display_timezone=job.timezone,
             )
         finally:
             data.close()
 
         elapsed_s = time.time() - t0
-        end_dt = datetime.now()
+        end_dt = datetime.now().astimezone()
         _write_run_params(
             output_dir=run_dir,
             job=job,

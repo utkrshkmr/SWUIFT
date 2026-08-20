@@ -30,8 +30,9 @@
   },
   "config": {
     "grid_size": 13.875,
-    "t_start": "2021-12-30 18:00",
-    "t_end": "2021-12-31 04:00",
+    "t_start": "2021-12-30 11:00",
+    "t_end": "2021-12-30 21:00",
+    "timezone": "America/Denver",
     "expected_steps": 121,
     "harden_rad": 70.0,
     "harden_spo": 70.0,

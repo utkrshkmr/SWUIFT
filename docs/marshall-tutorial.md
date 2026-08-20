@@ -9,10 +9,11 @@ This walkthrough configures the requested Marshall window:
 - **Duration:** 10 hours = 600 minutes
 - **Inclusive states:** `600 / 5 + 1 = 121`
 
-!!! warning "Timezone entry"
-    SWUIFT's current CLI accepts timestamps without a timezone suffix. Enter
-    `2021-12-30 18:00` and `2021-12-31 04:00`, then preserve the UTC convention
-    in your run notes. Do not append `Z` to CLI values.
+!!! note "Timezone entry"
+    Enter local wall times `2021-12-30 11:00` and `2021-12-30 21:00` with
+    `America/Denver`. SWUIFT converts this interval to the validated UTC window
+    internally and displays results in Mountain Standard Time. See
+    [Timezone codes](timezones.md).
 
 ## 1. Prepare the input directory
 
@@ -65,8 +66,9 @@ swuift \
   --water <MARSHALL_INPUT_DIR>/water_matrix.mat \
   --wind <MARSHALL_INPUT_DIR>/wind.mat \
   --grid-size 10 \
-  --t-start "2021-12-30 18:00" \
-  --t-end "2021-12-31 04:00" \
+  --t-start "2021-12-30 11:00" \
+  --t-end "2021-12-30 21:00" \
+  --timezone America/Denver \
   --harden-rad 70 \
   --harden-spo 70 \
   --rad-ig-thresh 14000 \
@@ -90,8 +92,8 @@ for research conclusions.
 ## 4. Configure the desktop GUI
 
 1. Select the same ten files on **Data Inputs**.
-2. On **Grid & Time**, set the start to `2021-12-30 18:00` and end to
-   `2021-12-31 04:00`, using the UTC convention.
+2. On **Grid & Time**, choose `America/Denver`, set the start to
+   `2021-12-30 11:00`, and set the end to `2021-12-30 21:00`.
 3. Confirm the interface reports **121** inclusive states at five-minute
    spacing.
 4. Enter the same radiation, firebrand, hardening, and seed values.
@@ -103,8 +105,9 @@ for research conclusions.
 Open the newly created `marshall_20211230_121_steps_<timestamp>/` directory.
 Check `run_params.json` before interpreting results:
 
-- `t_start` corresponds to `2021-12-30 18:00` UTC;
-- `t_end` corresponds to `2021-12-31 04:00` UTC;
+- `timezone` is `America/Denver`;
+- local 11:00–21:00 corresponds to `2021-12-30T18:00:00Z` through
+  `2021-12-31T04:00:00Z`;
 - `max_steps` is `121`;
 - the grid shape matches the Marshall bundle;
 - input paths, seeds, and requested output switches are correct.

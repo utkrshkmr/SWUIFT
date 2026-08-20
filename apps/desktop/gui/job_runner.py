@@ -1,13 +1,19 @@
 from __future__ import annotations
+
 import io
+import json
 import os
 import sys
 import threading
+import time
 import traceback
 from datetime import datetime
 from typing import List
+
 from PySide6.QtCore import QThread, Signal
-from .job_queue import JobConfig, STATUS_DONE, STATUS_FAILED, STATUS_RUNNING
+
+from .job_queue import JobConfig
+
 
 class _StreamRedirect(io.TextIOBase):
 
@@ -66,6 +72,7 @@ class JobRunner(QThread):
             from swuift.data_loader import load_all_extracted, load_scenario_data
             from swuift.scenario import load_scenario_manifest
             from swuift.simulation import SimulationCancelledError, run_simulation
+            from swuift.timezones import local_to_utc, localized_timestamp, utc_isoformat
         except ImportError as exc:
             self.job_finished.emit(job.job_id, False, f'Import error: {exc}')
             return
@@ -94,7 +101,9 @@ class JobRunner(QThread):
             else:
                 data = load_all_extracted(wildland_fire_matrix_file=job.wildland_fire_matrix, domain_matrix_file=job.domain_matrix, binary_cover_file=job.binary_cover, homes_matrix_file=job.homes_matrix, latitude_file=job.latitude, longitude_file=job.longitude, radiation_matrix_file=job.radiation_matrix, spotting_matrix_file=job.spotting_matrix, water_matrix_file=job.water_matrix, wind_file=job.wind_file, preload_wind=not job.lazy_wind)
             self.job_phase.emit(job_id, 'Building config')
-            cfg = build_config(grid_size=job.grid_size, t_start=job.t_start, t_end=job.t_end, max_steps=job.maxstep, harden_rad=job.hardening_rad, harden_spo=job.hardening_spo, rad_ig_thresh=job.rad_energy_ig, rad_decay=job.rad_rf, brand_wind_coef=job.fb_wind_coef, brand_wind_sd=job.fb_wind_sd, brand_wind_sd_lat=job.fb_wind_sd_transverse, seed_harden=job.seed_hardening, seed_spread=job.seed_spread, hardening_profile=job.hardening_profile, rng_profile=job.rng_profile, scenario_id=job.scenario_id or None)
+            t_start_utc = local_to_utc(job.t_start, job.timezone)
+            t_end_utc = local_to_utc(job.t_end, job.timezone)
+            cfg = build_config(grid_size=job.grid_size, t_start=t_start_utc, t_end=t_end_utc, max_steps=job.maxstep, harden_rad=job.hardening_rad, harden_spo=job.hardening_spo, rad_ig_thresh=job.rad_energy_ig, rad_decay=job.rad_rf, brand_wind_coef=job.fb_wind_coef, brand_wind_sd=job.fb_wind_sd, brand_wind_sd_lat=job.fb_wind_sd_transverse, seed_harden=job.seed_hardening, seed_spread=job.seed_spread, hardening_profile=job.hardening_profile, rng_profile=job.rng_profile, scenario_id=job.scenario_id or None)
             stamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             out_dir = os.path.join(job.output_dir, f'run_{stamp}')
             base = out_dir
@@ -108,10 +117,33 @@ class JobRunner(QThread):
                 self._handle_post_cancel(job_id)
                 return
             self.job_phase.emit(job_id, 'Simulating')
+            run_started = datetime.now().astimezone()
+            run_clock = time.perf_counter()
 
             def _phase_cb(phase: str):
                 self.job_phase.emit(job_id, phase)
-            run_simulation(cfg, data, out_dir, frame_dpi=job.dpi_hires, dump_every=job.dump_interval, dump_csv=job.dump_csv, out_frames=True, out_video=job.make_video, out_gif=job.make_video, out_ig_plots=True, out_fire_csv=True, out_buildings_csv=True, out_rad_steps=job.dump_radiation_csv, out_spo_steps=job.dump_spotting_csv, emit_metrics=True, emit_frame_state=True, checkpoint_every=0, forensic_full=False, progress_callback=_progress, cancellation_callback=lambda: self._cancel_current or self.isInterruptionRequested(), phase_callback=_phase_cb)
+            simulation_metadata = run_simulation(cfg, data, out_dir, frame_dpi=job.dpi_hires, dump_every=job.dump_interval, dump_csv=job.dump_csv, out_frames=True, out_video=job.make_video, out_gif=job.make_video, out_ig_plots=True, out_fire_csv=True, out_buildings_csv=True, out_rad_steps=job.dump_radiation_csv, out_spo_steps=job.dump_spotting_csv, emit_metrics=True, emit_frame_state=True, checkpoint_every=0, forensic_full=False, progress_callback=_progress, cancellation_callback=lambda: self._cancel_current or self.isInterruptionRequested(), phase_callback=_phase_cb, display_timezone=job.timezone)
+            run_ended = datetime.now().astimezone()
+            with open(os.path.join(out_dir, 'run_params.json'), 'w', encoding='utf-8') as handle:
+                json.dump({
+                    'schema_version': 1,
+                    'source': 'desktop',
+                    'started_at': run_started.isoformat(),
+                    'ended_at': run_ended.isoformat(),
+                    'elapsed_seconds': time.perf_counter() - run_clock,
+                    'config': {
+                        'timezone': job.timezone,
+                        't_start_entered': job.t_start.isoformat(sep=' '),
+                        't_end_entered': job.t_end.isoformat(sep=' '),
+                        't_start_utc': utc_isoformat(t_start_utc),
+                        't_end_utc': utc_isoformat(t_end_utc),
+                        't_start_local': localized_timestamp(t_start_utc, job.timezone)['local'],
+                        't_end_local': localized_timestamp(t_end_utc, job.timezone)['local'],
+                        'grid_size': cfg.grid_size,
+                        'max_steps': cfg.maxstep,
+                    },
+                    'simulation_metadata': simulation_metadata,
+                }, handle, indent=2)
             self.job_phase.emit(job_id, 'Done')
             self.job_finished.emit(job_id, True, '')
         except SimulationCancelledError:

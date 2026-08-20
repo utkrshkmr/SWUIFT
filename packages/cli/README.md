@@ -121,6 +121,7 @@ swuift \
   --grid-size 10 \
   --t-start "2025-01-07 18:20" \
   --t-end "2025-01-08 14:20" \
+  --timezone America/Los_Angeles \
   --harden-rad 70 \
   --harden-spo 70 \
   --rad-ig-thresh 14000.0 \
@@ -171,6 +172,7 @@ Top-level key must be `jobs`, containing an array:
       "grid_size": 10,
       "t_start": "2025-01-07 18:20",
       "t_end": "2025-01-08 14:20",
+      "timezone": "America/Los_Angeles",
       "harden_rad": 70.0,
       "harden_spo": 70.0,
       "rad_ig_thresh": 14000.0,
@@ -199,7 +201,10 @@ Top-level key must be `jobs`, containing an array:
 ```
 
 Notes:
-- Time steps are automatically derived from `t_start` and `t_end` using 5-minute intervals.
+- `t_start` and `t_end` are local wall times in the required IANA `timezone`.
+  Run `swuift --list-timezones` for every supported identifier.
+- SWUIFT converts the interval to UTC, then automatically derives 5-minute
+  simulation states. Displayed result times use the entered timezone.
 - If `t_start` or `t_end` is not quantized to a 5-minute boundary, SWUIFT raises:
   `not possible to calculate integer time steps`.
 - Any non-wind input can be either `.mat` or `.csv` (mixed formats are allowed).

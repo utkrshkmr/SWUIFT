@@ -6,3 +6,4 @@ matplotlib
 imageio[ffmpeg]
 tqdm
 av
+tzdata

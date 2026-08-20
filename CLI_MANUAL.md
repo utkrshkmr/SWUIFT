@@ -27,8 +27,9 @@ swuift \
   --harden-rad-map <PATH> --harden-spo-map <PATH> \
   --water <PATH> --wind <PATH> \
   --grid-size 10 \
-  --t-start "2021-12-30 18:00" \
-  --t-end "2021-12-31 04:00" \
+  --t-start "2021-12-30 11:00" \
+  --t-end "2021-12-30 21:00" \
+  --timezone America/Denver \
   --harden-rad 70 --harden-spo 70 \
   --rad-ig-thresh 14000 --rad-decay 1.0 \
   --brand-wind-coef 30 --brand-wind-sd 0.3 \
@@ -40,8 +41,10 @@ swuift \
 ```
 
 Replace all angle-bracket placeholders. The CLI accepts
-`YYYY-MM-DD HH:MM`, `YYYY-MM-DDTHH:MM`, or `YYYY-MM-DD HH:MM:SS`; it does not
-accept timezone suffixes. Both endpoints must align to five-minute boundaries.
+`YYYY-MM-DD HH:MM`, `YYYY-MM-DDTHH:MM`, or `YYYY-MM-DD HH:MM:SS` as local wall
+time. A separate IANA `--timezone` is required; list every accepted code with
+`swuift --list-timezones`. Both endpoints must align to five-minute boundaries.
+SWUIFT converts them to UTC for simulation and localizes displayed results.
 
 Batch mode reads a non-empty top-level `jobs` array:
 
@@ -57,6 +60,7 @@ frames, animations, and per-step diagnostics depend on output switches.
 
 - [CLI options and JSON schema](docs/cli.md)
 - [Input schema](docs/input-schema.md)
+- [Supported timezone codes](docs/timezones.md)
 - [Marshall 121-state tutorial](docs/marshall-tutorial.md)
 - [Expected outputs](docs/outputs.md)
 - [Troubleshooting and contact](docs/troubleshooting.md)

@@ -8,6 +8,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .timezones import validate_timezone
+
 
 def parse_datetime(value: str) -> datetime:
     for fmt in ("%Y-%m-%d %H:%M", "%Y-%m-%dT%H:%M", "%Y-%m-%d %H:%M:%S"):
@@ -54,6 +56,7 @@ class JobSpec:
     grid_size: float
     t_start: datetime
     t_end: datetime
+    timezone: str
     harden_rad: float
     harden_spo: float
     rad_ig_thresh: float
@@ -114,6 +117,7 @@ _REQUIRED_JSON_FIELDS = [
     "grid_size",
     "t_start",
     "t_end",
+    "timezone",
     "harden_rad",
     "harden_spo",
     "rad_ig_thresh",
@@ -159,6 +163,7 @@ def _build_job(job_dict: dict[str, Any], idx: int) -> JobSpec:
         grid_size=float(job_dict["grid_size"]),
         t_start=parse_datetime(str(job_dict["t_start"])),
         t_end=parse_datetime(str(job_dict["t_end"])),
+        timezone=validate_timezone(str(job_dict["timezone"])),
         harden_rad=float(job_dict["harden_rad"]),
         harden_spo=float(job_dict["harden_spo"]),
         rad_ig_thresh=float(job_dict["rad_ig_thresh"]),

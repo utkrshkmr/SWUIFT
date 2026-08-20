@@ -19,7 +19,8 @@ dependencies = [
   "matplotlib",
   "imageio[ffmpeg]",
   "tqdm",
-  "av"
+  "av",
+  "tzdata"
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",

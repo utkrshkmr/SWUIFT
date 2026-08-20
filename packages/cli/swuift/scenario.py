@@ -8,6 +8,8 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
+from .timezones import validate_timezone
+
 SCENARIO_IDS = ("marshall",)
 
 
@@ -90,7 +92,7 @@ def _validate_payload(payload: dict[str, Any], path: Path) -> None:
         raise ValueError(f"{path}: unsupported scenario_id {scenario!r}")
     cfg = payload["config"]
     for field in (
-        "grid_size", "t_start", "t_end", "expected_steps", "hardening_profile",
+        "grid_size", "t_start", "t_end", "timezone", "expected_steps", "hardening_profile",
         "rng_profile", "rad_ig_thresh", "rad_decay",
     ):
         if field not in cfg:
@@ -101,6 +103,7 @@ def _validate_payload(payload: dict[str, Any], path: Path) -> None:
         raise ValueError(f"{path}: invalid rng_profile")
     if cfg["rng_profile"] == "seeded" and cfg.get("seed_spread") is None:
         raise ValueError(f"{path}: seeded RNG profile requires seed_spread")
+    validate_timezone(str(cfg["timezone"]))
 
 
 def load_scenario_manifest(
@@ -167,6 +170,7 @@ def build_scenario_job(
         grid_size=float(cfg["grid_size"]),
         t_start=parse_datetime(cfg["t_start"]),
         t_end=parse_datetime(cfg["t_end"]),
+        timezone=validate_timezone(str(cfg["timezone"])),
         harden_rad=float(cfg["harden_rad"]),
         harden_spo=float(cfg["harden_spo"]),
         rad_ig_thresh=scalar("rad_energy_ig", float(cfg["rad_ig_thresh"])),

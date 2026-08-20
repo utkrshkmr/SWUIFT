@@ -34,6 +34,7 @@ jobs:
       - name: Validate release metadata
         run: |
           python scripts/check_release_metadata.py
+          python scripts/generate_timezone_docs.py --check
           cffconvert --validate
           python -m json.tool .zenodo.json >/dev/null
 
@@ -46,7 +47,9 @@ jobs:
             scripts/check_public_boundary.py \
             scripts/check_release_metadata.py \
             scripts/generate_sha256_manifest.py \
+            scripts/generate_timezone_docs.py \
             scripts/verify_sha256_manifest.py
+          python -m py_compile packages/cli/swuift/timezones.py
 
       - name: Build and inspect Python distributions
         run: |

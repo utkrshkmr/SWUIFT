@@ -211,8 +211,9 @@ def build_manifest(artifact_dir: Path) -> dict[str, Any]:
         },
         "config": {
             "grid_size": 13.875,
-            "t_start": "2021-12-30 18:00",
-            "t_end": "2021-12-31 04:00",
+            "t_start": "2021-12-30 11:00",
+            "t_end": "2021-12-30 21:00",
+            "timezone": "America/Denver",
             "expected_steps": STEPS,
             "harden_rad": 70.0,
             "harden_spo": 70.0,
@@ -227,8 +228,8 @@ def build_manifest(artifact_dir: Path) -> dict[str, Any]:
             "seed_spread": 10,
         },
         "time": {
-            "basis": "UTC",
-            "local_zone": "MST (UTC-07:00)",
+            "basis": "local IANA timezone converted to UTC for simulation",
+            "local_zone": "America/Denver",
             "start_inclusive_utc": "2021-12-30T18:00:00Z",
             "end_inclusive_utc": "2021-12-31T04:00:00Z",
             "start_inclusive_local": "2021-12-30T11:00:00-07:00",

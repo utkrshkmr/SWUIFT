@@ -4,3 +4,4 @@
 -e packages/cli
 PySide6>=6.6
 Pillow
+tzdata
