@@ -26,9 +26,10 @@ Do not preconstruct or guess DOI values.
 Until the archival metadata is published:
 
 ```text
-Elhami-Khorasani, N. (YEAR). SWUIFT: Simulating Wildfire–Urban Interface
-Fire Transmission (Version VERSION) [Computer software].
-Zenodo. https://doi.org/<FUTURE_ZENODO_VERSION_DOI>
+Masoudvaziri, N., Szasdi Bardales, F., Kumar, U., & Elhami-Khorasani, N.
+(YEAR). SWUIFT: Simulating Wildfire–Urban Interface Fire Transmission
+(Version VERSION) [Computer software]. Zenodo.
+https://doi.org/<FUTURE_ZENODO_VERSION_DOI>
 ```
 
 The current citation metadata identifies version `1.0.0`; confirm the version,
@@ -40,7 +41,8 @@ window, and seeds in the methods or data-availability statement.
 
 ```bibtex
 @software{swuift_VERSION,
-  author    = {Elhami-Khorasani, Negar},
+  author    = {Masoudvaziri, Nima and Szasdi Bardales, Fernando and
+               Kumar, Utkarsh and Elhami-Khorasani, Negar},
   title     = {SWUIFT: Simulating Wildfire--Urban Interface Fire Transmission},
   year      = {<YEAR>},
   version   = {<VERSION>},
