@@ -1,6 +1,6 @@
 # SWUIFT
 
-**Simulating Wildfire–Urban Interface Fire Transmission**
+**Streamlined Wildland-Urban Interface Fire Tracing**
 
 SWUIFT is research software for studying vegetation fire, wind-driven
 firebrands, radiant heat, and structure hardening on a gridded

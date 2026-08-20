@@ -453,7 +453,7 @@ class MainWindow(QMainWindow):
             self,
             'About SWUIFT',
             f'<h3>SWUIFT {APP_VERSION}</h3>'
-            '<p>Simulating Wildfire-Urban Interface Fire Transmission</p>'
+            '<p>Streamlined Wildland-Urban Interface Fire Tracing</p>'
             f'<p><b>Build:</b> {BUILD_ID}<br><b>License:</b> {license_name}</p>'
             '<p>License and third-party notices are included with this application.</p>',
         )

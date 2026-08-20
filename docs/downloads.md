@@ -29,7 +29,7 @@ or supported.
 - Detached checksum signature:
   `<FUTURE_GITHUB_RELEASE_URL>/download/<VERSION>/SHA256SUMS.asc`
 - Signing key: `<FUTURE_SIGNING_KEY_URL>`
-- Archived release record: `<FUTURE_ZENODO_VERSION_DOI_URL>`
+- Archived release record:
 
 An immutable link must contain a release tag, exact commit, or version DOI.
 Links to a moving branch such as `main`, to “latest,” or to a workflow run are

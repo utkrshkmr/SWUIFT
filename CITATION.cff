@@ -1,26 +1,22 @@
 cff-version: 1.2.0
 message: "If you use SWUIFT in research, please cite this software."
-title: "SWUIFT: Simulating Wildfire-Urban Interface Fire Transmission"
+title: "SWUIFT: Streamlined Wildland-Urban Interface Fire Tracing"
 type: software
 version: 1.0.0
 authors:
   - family-names: Masoudvaziri
     given-names: Nima
-    email: nmvaziri@gmail.com
   - family-names: Szasdi Bardales
     given-names: Fernando
-    email: szasdi-bardales.research@outlook.com
   - family-names: Kumar
     given-names: Utkarsh
-    email: ukumar0105@gmail.com
   - family-names: Elhami-Khorasani
     given-names: Negar
-    email: negarkho@Buffalo.edu
 license-url: "https://github.com/utkrshkmr/SWUIFT/blob/main/LICENSE"
 repository-code: "https://github.com/utkrshkmr/SWUIFT"
 abstract: >-
-  SWUIFT is software for simulating wildfire-urban interface fire
-  transmission.
+  SWUIFT is software for tracing fire spread in wildland-urban interface and
+  urban areas.
 keywords:
   - wildfire
   - wildland-urban interface

@@ -1,11 +1,19 @@
 {
-  "title": "SWUIFT: Simulating Wildfire-Urban Interface Fire Transmission",
+  "title": "SWUIFT: Streamlined Wildland-Urban Interface Fire Tracing",
   "upload_type": "software",
-  "description": "Software for simulating wildfire-urban interface fire transmission.",
+  "description": "Software for tracing fire spread in wildland-urban interface and urban areas.",
   "creators": [
     {
-      "name": "Elhami-Khorasani, Negar",
-      "affiliation": "University at Buffalo"
+      "name": "Masoudvaziri, Nima"
+    },
+    {
+      "name": "Szasdi Bardales, Fernando"
+    },
+    {
+      "name": "Kumar, Utkarsh"
+    },
+    {
+      "name": "Elhami-Khorasani, Negar"
     }
   ],
   "keywords": [

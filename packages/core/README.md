@@ -1,6 +1,6 @@
 # swuift-core
 
-Shared physics package for SWUIFT (Simulating Wildfire-Urban Interface Fire Transmission).
+Shared physics package for SWUIFT (Streamlined Wildland-Urban Interface Fire Tracing).
 
 Contains the canonical simulation kernels used by the desktop app and CLI:
 

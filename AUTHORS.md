@@ -1,12 +1,11 @@
-# Authors and Contributors
+# Authors
 
 SWUIFT is developed at the University at Buffalo.
 
+- Nima Masoudvaziri
+- Fernando Szasdi Bardales
+- Utkarsh Kumar
 - Negar Elhami-Khorasani
 
 The copyright holder is The Research Foundation for the State University of
-New York. Additional contributors are recorded in the version-control history.
-
-Before the first public release, project maintainers should review this file
-against the repository history and add contributors who want public
-attribution. No ORCID identifiers are listed because none have been verified.
+New York. No ORCID identifiers are listed because none have been verified.

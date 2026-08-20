@@ -1,1 +1,1 @@
-"""SWUIFT – Simulating Wildfire-Urban Interface Fire Transmission (Python port)."""
+"""SWUIFT: Streamlined Wildland-Urban Interface Fire Tracing."""

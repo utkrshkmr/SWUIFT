@@ -11,25 +11,24 @@ Use two DOI levels:
 For reproducible research, cite the **version DOI** that matches the software
 actually used. The project page may also display the concept DOI.
 
-| Record | FUTURE PUBLICATION VALUE |
+| Record | Published value |
 |---|---|
-| Concept DOI | `<FUTURE_ZENODO_CONCEPT_DOI>` |
-| Concept record | `<FUTURE_ZENODO_CONCEPT_RECORD_URL>` |
-| Current version DOI | `<FUTURE_ZENODO_VERSION_DOI>` |
-| Current version record | `<FUTURE_ZENODO_VERSION_RECORD_URL>` |
+| Concept DOI | |
+| Concept record | |
+| Current version DOI | |
+| Current version record | |
 
-These placeholders must be replaced only after Zenodo has minted the records.
-Do not preconstruct or guess DOI values.
+These fields remain empty until Zenodo has minted the records. Do not
+preconstruct or guess DOI values.
 
 ## Suggested software citation
 
 Until the archival metadata is published:
 
 ```text
-Masoudvaziri, N., Szasdi Bardales, F., Kumar, U., & Elhami-Khorasani, N.
-(YEAR). SWUIFT: Simulating Wildfire–Urban Interface Fire Transmission
-(Version VERSION) [Computer software]. Zenodo.
-https://doi.org/<FUTURE_ZENODO_VERSION_DOI>
+Nima Masoudvaziri, Fernando Szasdi Bardales, Utkarsh Kumar, and Negar
+Elhami-Khorasani. (YEAR). SWUIFT: Streamlined Wildland–Urban Interface Fire
+Tracing (Version VERSION) [Computer software].
 ```
 
 The current citation metadata identifies version `1.0.0`; confirm the version,
@@ -43,12 +42,12 @@ window, and seeds in the methods or data-availability statement.
 @software{swuift_VERSION,
   author    = {Masoudvaziri, Nima and Szasdi Bardales, Fernando and
                Kumar, Utkarsh and Elhami-Khorasani, Negar},
-  title     = {SWUIFT: Simulating Wildfire--Urban Interface Fire Transmission},
+  title     = {SWUIFT: Streamlined Wildland--Urban Interface Fire Tracing},
   year      = {<YEAR>},
   version   = {<VERSION>},
-  publisher = {Zenodo},
-  doi       = {<FUTURE_ZENODO_VERSION_DOI>},
-  url       = {https://doi.org/<FUTURE_ZENODO_VERSION_DOI>}
+  publisher = {},
+  doi       = {},
+  url       = {}
 }
 ```
 
