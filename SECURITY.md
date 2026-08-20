@@ -9,8 +9,8 @@ versions may receive fixes at the maintainers' discretion.
 
 Do not open a public issue for a suspected vulnerability. Submit a private
 [GitHub security advisory](https://github.com/utkrshkmr/SWUIFT/security/advisories/new).
-If that form is unavailable, email `techtransfer@buffalo.edu` with the subject
-`SWUIFT security report`. Include:
+If that form is unavailable, email Negar Elhami-Khorasani at
+`negarkho@Buffalo.edu` with the subject `SWUIFT security report`. Include:
 
 - the affected version and component;
 - steps to reproduce or a proof of concept;
