@@ -26,7 +26,7 @@ jobs:
       - name: Install quality and build tools
         run: >-
           python -m pip install --upgrade pip build cffconvert mypy ruff tomli
-          twine
+          twine tzdata==2026.3
 
       - name: Validate the public boundary
         run: python scripts/check_public_boundary.py

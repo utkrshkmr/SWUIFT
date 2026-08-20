@@ -110,6 +110,7 @@ Abbreviations such as `CST` are not accepted because they are ambiguous.
 - `America/Coral_Harbour`
 - `America/Cordoba`
 - `America/Costa_Rica`
+- `America/Coyhaique`
 - `America/Creston`
 - `America/Cuiaba`
 - `America/Curacao`
@@ -591,9 +592,6 @@ Abbreviations such as `CST` are not accepted because they are ambiguous.
 - `US/Mountain`
 - `US/Pacific`
 - `US/Samoa`
-## build
-
-- `build/etc/localtime`
 ## Other
 
 - `CET`

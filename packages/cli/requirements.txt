@@ -6,4 +6,4 @@ matplotlib
 imageio[ffmpeg]
 tqdm
 av
-tzdata
+tzdata==2026.3

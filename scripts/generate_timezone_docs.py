@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
-from zoneinfo import available_timezones
+from zoneinfo import available_timezones, reset_tzpath
+
+reset_tzpath(())
 
 
 def repository_root() -> Path:

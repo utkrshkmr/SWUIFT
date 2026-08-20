@@ -4,9 +4,17 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from functools import lru_cache
-from zoneinfo import ZoneInfo, ZoneInfoNotFoundError, available_timezones
+from zoneinfo import (
+    ZoneInfo,
+    ZoneInfoNotFoundError,
+    available_timezones,
+    reset_tzpath,
+)
 
 UTC = timezone.utc
+# Use the declared tzdata package on every operating system instead of allowing
+# host-specific timezone databases to change the accepted catalog.
+reset_tzpath(())
 
 
 @lru_cache(maxsize=1)
